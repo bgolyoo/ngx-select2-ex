@@ -1,0 +1,16 @@
+<span class="select2-container" [ngClass]="getContainerThemeClass()" [class.select2-container--open]="true">
+  <span id="select2-dropdown" class="select2-dropdown select2-dropdown--below" dir="ltr" style="width: 555px;">
+    <span class="select2-search select2-search--dropdown">
+      <input class="select2-search__field" type="search" tabindex="0" autocomplete="off" autocorrect="off" autocapitalize="off"
+        spellcheck="false" role="textbox">
+    </span>
+    <span class="select2-results">
+      <ul class="select2-results__options" role="tree" id="select2-s2-single-results" aria-expanded="true" aria-hidden="false">
+        <li *ngFor="let option of options" class="select2-results__option" [class.select2-results__option--highlighted]="option.highlighted"
+          role="treeitem" [attr.aria-selected]="option.selected" (mouseover)="onOptionHover(option)" (click)="onOptionClick(option)">
+          {{option.value}}
+        </li>
+      </ul>
+    </span>
+  </span>
+</span>
