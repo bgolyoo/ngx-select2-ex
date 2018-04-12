@@ -9,6 +9,7 @@ import { Observable } from 'rxjs/Observable';
 export class NgxSelect2ExService {
 
   theme = 'default';
+  minimumResultsForSearch = 0;
 
   private _options: BehaviorSubject<Array<NgxSelect2ExOption>> = new BehaviorSubject([]);
   private _boundingClientRect: ReplaySubject<ClientRect> = new ReplaySubject(1);

@@ -11,6 +11,7 @@ import { NgxSelect2ExOptionHandler } from '../../classes/ngx-select2-ex-option-h
 export class NgxSelect2ExDropdownComponent implements OnInit, OnDestroy {
 
   @Input() theme: string;
+  @Input() minimumResultsForSearch: number;
 
   @HostBinding('style.display') display = 'flex';
   @HostBinding('style.position') position = 'absolute';
@@ -50,6 +51,10 @@ export class NgxSelect2ExDropdownComponent implements OnInit, OnDestroy {
 
   getContainerThemeClass(): string {
     return 'select2-container--' + this.theme;
+  }
+
+  shouldHideSearchBox(): boolean {
+    return this.options.length < this.minimumResultsForSearch;
   }
 
   private subscribeToOptions() {

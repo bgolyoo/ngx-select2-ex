@@ -7,6 +7,7 @@ import { INgxSelect2ExOption } from './ngx-select2-ex/interfaces/ngx-select2-ex-
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
+  Infinity = Infinity;
   ngxOptions: Array<INgxSelect2ExOption> = [
     {
       id: '1',

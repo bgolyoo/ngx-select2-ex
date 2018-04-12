@@ -12,6 +12,7 @@ export class NgxSelect2ExComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input() options: Array<NgxSelect2ExOptionHandler>;
   @Input() theme: string;
+  @Input() minimumResultsForSearch: number;
 
   isOpen: boolean;
   isInFocus: boolean;
@@ -34,6 +35,7 @@ export class NgxSelect2ExComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     this.defaultChangeListener(changes, 'theme');
+    this.defaultChangeListener(changes, 'minimumResultsForSearch');
   }
 
   ngOnDestroy() {
@@ -45,11 +47,8 @@ export class NgxSelect2ExComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private subscribeToSelection(): void {
-    this.subscriptions.push(this.ngxSelect2ExService.getSelectionAsObservable().subscribe(
-      (selection: Array<NgxSelect2ExOptionHandler>) => {
-        this.selection = selection;
-      }
-    ));
+    this.subscriptions.push(this.ngxSelect2ExService.getSelectionAsObservable()
+      .subscribe((selection: Array<NgxSelect2ExOptionHandler>) => this.selection = selection));
   }
 
   private subscribeToIsOpen(): void {

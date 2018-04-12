@@ -43,7 +43,8 @@ export class NgxSelect2ExDirective {
   private openDropdown() {
     this.ngxSelect2ExService.boundingClientRect = this.el.nativeElement.getBoundingClientRect();
     this.compRef = this.ngxSelect2ExDropdownInjectionService.appendComponent(NgxSelect2ExDropdownComponent, {
-      theme: this.ngxSelect2ExService.theme
+      theme: this.ngxSelect2ExService.theme,
+      minimumResultsForSearch: this.ngxSelect2ExService.minimumResultsForSearch
     });
     this.setFocusForSearchField(this.compRef.location.nativeElement);
     this.ngxSelect2ExService.isOpen = true;
