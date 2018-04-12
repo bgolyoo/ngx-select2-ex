@@ -8,6 +8,7 @@ import { Observable } from 'rxjs/Observable';
 @Injectable()
 export class NgxSelect2ExService {
 
+  disabled = false;
   theme = 'default';
   minimumResultsForSearch = 0;
 

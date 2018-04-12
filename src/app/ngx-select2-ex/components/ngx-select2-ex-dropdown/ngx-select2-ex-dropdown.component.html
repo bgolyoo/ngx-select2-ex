@@ -5,7 +5,7 @@
         spellcheck="false" role="textbox">
     </span>
     <span class="select2-results">
-      <ul class="select2-results__options" role="tree" id="select2-s2-single-results" aria-expanded="true" aria-hidden="false">
+      <ul class="select2-results__options" role="tree" id="select2-results" aria-expanded="true" aria-hidden="false">
         <li *ngFor="let option of options" class="select2-results__option" [class.select2-results__option--highlighted]="option.highlighted"
           role="treeitem" [attr.aria-selected]="option.selected" (mouseover)="onOptionHover(option)" (click)="onOptionClick(option)">
           {{option.value}}

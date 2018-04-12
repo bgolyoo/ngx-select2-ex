@@ -23,7 +23,9 @@ export class NgxSelect2ExDirective {
 
     if (clickedInside && !this.ngxSelect2ExService.isOpen) {
       this.ngxSelect2ExService.isInFocus = true;
-      this.openDropdown();
+      if (!this.ngxSelect2ExService.disabled) {
+        this.openDropdown();
+      }
     } else if (clickedInside && this.ngxSelect2ExService.isOpen) {
       this.ngxSelect2ExService.isInFocus = true;
       this.closeDropdown();

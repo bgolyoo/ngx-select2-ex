@@ -1,9 +1,10 @@
-<span appNgxSelect2Ex class="select2 select2-container select2-container--below" [class.select2-container--open]="isOpen"
-  [ngClass]="getContainerThemeClass()" [class.select2-container--focus]="isInFocus" dir="ltr" style="width: 555px;">
+<span appNgxSelect2Ex class="select2 select2-container" [class.select2-container--below]="!disabled" [class.select2-container--open]="isOpen"
+  [ngClass]="getContainerThemeClass()" [class.select2-container--focus]="isInFocus" [class.select2-container--disabled]="disabled"
+  dir="ltr" style="width: 555px;">
   <span class="selection">
     <span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" [attr.aria-expanded]="isOpen"
-      tabindex="0" aria-labelledby="select2-s2-single-container" aria-owns="select2-s2-single-results">
-      <span class="select2-selection__rendered" id="select2-s2-single-container" [title]="selection[0]?.value">{{selection[0]?.value}}</span>
+      tabindex="0" aria-labelledby="select2-container" aria-owns="select2-results">
+      <span class="select2-selection__rendered" id="select2-selection-container" [title]="selection[0]?.value">{{selection[0]?.value}}</span>
       <span class="select2-selection__arrow" role="presentation">
         <b role="presentation"></b>
       </span>
