@@ -12,6 +12,6 @@ import { NgxSelect2ExDirective } from './directives/ngx-select2-ex.directive';
   declarations: [NgxSelect2ExComponent, NgxSelect2ExDropdownComponent, NgxSelect2ExDirective],
   exports: [NgxSelect2ExComponent],
   entryComponents: [NgxSelect2ExDropdownComponent],
-  providers: [NgxSelect2ExService, NgxSelect2ExDropdownInjectionService]
+  providers: [NgxSelect2ExDropdownInjectionService]
 })
 export class NgxSelect2ExModule { }

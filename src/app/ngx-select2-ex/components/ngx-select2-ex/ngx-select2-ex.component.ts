@@ -13,7 +13,8 @@ import { Subscription } from 'rxjs/Subscription';
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => NgxSelect2ExComponent),
       multi: true
-    }
+    },
+    NgxSelect2ExService
   ]
 })
 export class NgxSelect2ExComponent implements OnInit, OnChanges, OnDestroy, ControlValueAccessor {
@@ -30,7 +31,7 @@ export class NgxSelect2ExComponent implements OnInit, OnChanges, OnDestroy, Cont
   private subscriptions: Array<Subscription> = [];
   private propagateChange = (_: any) => { };
 
-  constructor(private ngxSelect2ExService: NgxSelect2ExService) { }
+  constructor(public ngxSelect2ExService: NgxSelect2ExService) { }
 
   ngOnInit() {
     this.subscribeToSelection();

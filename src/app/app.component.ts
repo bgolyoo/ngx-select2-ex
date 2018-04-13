@@ -34,11 +34,23 @@ export class AppComponent implements OnInit {
     }
   ];
 
+  ngxOptionsSecond: Array<INgxSelect2ExOption> = [
+    {
+      id: '1',
+      value: 'Option1'
+    },
+    {
+      id: '2',
+      value: 'Option2'
+    }
+  ];
+
   constructor(private fb: FormBuilder) { }
 
   ngOnInit() {
     this.form = this.fb.group({
-      select2: [{ value: this.ngxOptions, disabled: true }]
+      select2: [this.ngxOptions],
+      select2Second: [this.ngxOptionsSecond]
     });
     this.form.valueChanges.subscribe(value => console.log(value));
   }

@@ -1,4 +1,4 @@
-import { Directive, ComponentRef, ElementRef, HostListener } from '@angular/core';
+import { Directive, ComponentRef, ElementRef, HostListener, Input } from '@angular/core';
 import { NgxSelect2ExDropdownComponent } from '../components/ngx-select2-ex-dropdown/ngx-select2-ex-dropdown.component';
 import { NgxSelect2ExService } from '../services/ngx-select2-ex.service';
 import { NgxSelect2ExDropdownInjectionService } from '../services/ngx-select2-ex-dropdown-injection.service';
@@ -8,11 +8,12 @@ import { NgxSelect2ExDropdownInjectionService } from '../services/ngx-select2-ex
 })
 export class NgxSelect2ExDirective {
 
+  @Input() service: NgxSelect2ExService;
+
   private compRef: ComponentRef<NgxSelect2ExDropdownComponent>;
 
   constructor(
     private el: ElementRef,
-    private ngxSelect2ExService: NgxSelect2ExService,
     private ngxSelect2ExDropdownInjectionService: NgxSelect2ExDropdownInjectionService
   ) { }
 
@@ -21,35 +22,36 @@ export class NgxSelect2ExDirective {
     const dropdown = this.compRef ? this.compRef.location.nativeElement : null;
     const clickedInside = this.el.nativeElement.contains(targetElement) || (dropdown && dropdown.contains(targetElement));
 
-    if (clickedInside && !this.ngxSelect2ExService.isOpen) {
-      this.ngxSelect2ExService.isInFocus = true;
-      if (!this.ngxSelect2ExService.disabled) {
+    if (clickedInside && !this.service.isOpen) {
+      this.service.isInFocus = true;
+      if (!this.service.disabled) {
         this.openDropdown();
       }
-    } else if (clickedInside && this.ngxSelect2ExService.isOpen) {
-      this.ngxSelect2ExService.isInFocus = true;
+    } else if (clickedInside && this.service.isOpen) {
+      this.service.isInFocus = true;
       this.closeDropdown();
-    } else if (!clickedInside && this.ngxSelect2ExService.isOpen) {
-      this.ngxSelect2ExService.isInFocus = false;
+    } else if (!clickedInside && this.service.isOpen) {
+      this.service.isInFocus = false;
       this.closeDropdown();
-    } else if (!clickedInside && !this.ngxSelect2ExService.isOpen) {
-      this.ngxSelect2ExService.isInFocus = false;
+    } else if (!clickedInside && !this.service.isOpen) {
+      this.service.isInFocus = false;
     }
   }
 
   @HostListener('window:resize')
   resize() {
-    this.ngxSelect2ExService.boundingClientRect = this.el.nativeElement.getBoundingClientRect();
+    this.service.boundingClientRect = this.el.nativeElement.getBoundingClientRect();
   }
 
   private openDropdown() {
-    this.ngxSelect2ExService.boundingClientRect = this.el.nativeElement.getBoundingClientRect();
+    this.service.boundingClientRect = this.el.nativeElement.getBoundingClientRect();
     this.compRef = this.ngxSelect2ExDropdownInjectionService.appendComponent(NgxSelect2ExDropdownComponent, {
-      theme: this.ngxSelect2ExService.theme,
-      minimumResultsForSearch: this.ngxSelect2ExService.minimumResultsForSearch
+      service: this.service,
+      theme: this.service.theme,
+      minimumResultsForSearch: this.service.minimumResultsForSearch
     });
     this.setFocusForSearchField(this.compRef.location.nativeElement);
-    this.ngxSelect2ExService.isOpen = true;
+    this.service.isOpen = true;
   }
 
   private closeDropdown() {
@@ -57,7 +59,7 @@ export class NgxSelect2ExDirective {
       this.compRef.destroy();
       this.compRef = null;
     }
-    this.ngxSelect2ExService.isOpen = false;
+    this.service.isOpen = false;
   }
 
   private setFocusForSearchField(targetElement: any) {

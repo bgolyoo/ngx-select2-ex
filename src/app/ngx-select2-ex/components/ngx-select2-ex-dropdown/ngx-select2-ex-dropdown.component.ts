@@ -10,6 +10,7 @@ import { NgxSelect2ExOptionHandler } from '../../classes/ngx-select2-ex-option-h
 })
 export class NgxSelect2ExDropdownComponent implements OnInit, OnDestroy {
 
+  @Input() service: NgxSelect2ExService;
   @Input() theme: string;
   @Input() minimumResultsForSearch: number;
 
@@ -24,7 +25,7 @@ export class NgxSelect2ExDropdownComponent implements OnInit, OnDestroy {
 
   private subscriptions: Array<Subscription> = [];
 
-  constructor(private ngxSelect2ExService: NgxSelect2ExService) { }
+  constructor() { }
 
   ngOnInit() {
     this.subscribeToOptions();
@@ -43,9 +44,9 @@ export class NgxSelect2ExDropdownComponent implements OnInit, OnDestroy {
 
   onOptionClick(clickedOption: NgxSelect2ExOptionHandler): void {
     if (!clickedOption.selected) {
-      this.ngxSelect2ExService.select(clickedOption);
+      this.service.select(clickedOption);
     } else {
-      this.ngxSelect2ExService.deselect(clickedOption);
+      this.service.deselect(clickedOption);
     }
   }
 
@@ -58,7 +59,7 @@ export class NgxSelect2ExDropdownComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToOptions() {
-    this.subscriptions.push(this.ngxSelect2ExService.getOptionsAsObservable().subscribe(
+    this.subscriptions.push(this.service.getOptionsAsObservable().subscribe(
       (options: Array<NgxSelect2ExOptionHandler>) => {
         this.options = options;
       },
@@ -67,7 +68,7 @@ export class NgxSelect2ExDropdownComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToBoundingClientRectChanges() {
-    this.subscriptions.push(this.ngxSelect2ExService.getBoundingClientRectAsObservable().subscribe(
+    this.subscriptions.push(this.service.getBoundingClientRectAsObservable().subscribe(
       (boundingClientRect: ClientRect) => this.initBoundingClientRectParams(boundingClientRect)
     ));
   }

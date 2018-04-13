@@ -1,4 +1,4 @@
-<span appNgxSelect2Ex class="select2 select2-container" [class.select2-container--below]="!disabled" [class.select2-container--open]="isOpen"
+<span appNgxSelect2Ex [service]="ngxSelect2ExService" class="select2 select2-container" [class.select2-container--below]="!disabled" [class.select2-container--open]="isOpen"
   [ngClass]="getContainerThemeClass()" [class.select2-container--focus]="isInFocus" [class.select2-container--disabled]="disabled"
   dir="ltr" style="width: 555px;">
   <span class="selection">
