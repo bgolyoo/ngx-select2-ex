@@ -14,7 +14,7 @@ export class NgxSelect2ExDropdownComponent implements OnInit, OnDestroy {
   @Input() theme: string;
   @Input() minimumResultsForSearch: number;
 
-  @HostBinding('style.display') display = 'flex';
+  @HostBinding('style.display') display = 'block';
   @HostBinding('style.position') position = 'absolute';
   @HostBinding('style.top') top;
   @HostBinding('style.left') left;
@@ -69,7 +69,10 @@ export class NgxSelect2ExDropdownComponent implements OnInit, OnDestroy {
 
   private subscribeToBoundingClientRectChanges() {
     this.subscriptions.push(this.service.getBoundingClientRectAsObservable().subscribe(
-      (boundingClientRect: ClientRect) => this.initBoundingClientRectParams(boundingClientRect)
+      (boundingClientRect: ClientRect) => {
+        console.log(boundingClientRect);
+        this.initBoundingClientRectParams(boundingClientRect);
+      }
     ));
   }
 
