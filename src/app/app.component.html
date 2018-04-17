@@ -1,9 +1,10 @@
 <!-- <app-ngx-select2-ex [options]="ngxOptions" [theme]="'bootstrap'" [minimumResultsForSearch]="Infinity"></app-ngx-select2-ex> -->
 
 <form [formGroup]="form">
-<div class="row">
-  <dir class="col">
-      <app-ngx-select2-ex formControlName="select2" [theme]="'bootstrap'" [minimumResultsForSearch]="Infinity"></app-ngx-select2-ex>
+  <div class="row">
+    <dir class="col">
+      <app-ngx-select2-ex formControlName="select2" [theme]="'bootstrap'" [minimumResultsForSearch]="Infinity" [allowClear]="true"
+        [placeholder]="'This is my placeholder'"></app-ngx-select2-ex>
     </dir>
     <dir class="col">
       <app-ngx-select2-ex formControlName="select2Second" [theme]="'bootstrap'" [minimumResultsForSearch]="2"></app-ngx-select2-ex>

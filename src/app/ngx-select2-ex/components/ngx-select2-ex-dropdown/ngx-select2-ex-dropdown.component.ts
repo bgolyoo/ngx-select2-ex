@@ -60,19 +60,14 @@ export class NgxSelect2ExDropdownComponent implements OnInit, OnDestroy {
 
   private subscribeToOptions() {
     this.subscriptions.push(this.service.getOptionsAsObservable().subscribe(
-      (options: Array<NgxSelect2ExOptionHandler>) => {
-        this.options = options;
-      },
+      (options: Array<NgxSelect2ExOptionHandler>) => this.options = options,
       error => console.error(error)
     ));
   }
 
   private subscribeToBoundingClientRectChanges() {
     this.subscriptions.push(this.service.getBoundingClientRectAsObservable().subscribe(
-      (boundingClientRect: ClientRect) => {
-        console.log(boundingClientRect);
-        this.initBoundingClientRectParams(boundingClientRect);
-      }
+      (boundingClientRect: ClientRect) => this.initBoundingClientRectParams(boundingClientRect)
     ));
   }
 

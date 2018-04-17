@@ -23,6 +23,8 @@ export class NgxSelect2ExComponent implements OnInit, OnChanges, OnDestroy, Cont
   @Input() disabled: boolean;
   @Input() theme: string;
   @Input() minimumResultsForSearch: number;
+  @Input() allowClear = false;
+  @Input() placeholder: string;
 
   isOpen: boolean;
   isInFocus: boolean;
@@ -46,7 +48,6 @@ export class NgxSelect2ExComponent implements OnInit, OnChanges, OnDestroy, Cont
     }
     if (changes['disabled'] !== undefined &&
       changes['disabled'].previousValue !== changes['disabled'].currentValue) {
-      this.disabled = changes['disabled'].currentValue;
       this.ngxSelect2ExService.disabled = changes['disabled'].currentValue;
     }
 
@@ -75,6 +76,30 @@ export class NgxSelect2ExComponent implements OnInit, OnChanges, OnDestroy, Cont
 
   getContainerThemeClass(): string {
     return 'select2-container--' + this.ngxSelect2ExService.theme;
+  }
+
+  clearSelection() {
+    if (this.shouldShowClearSelectionButton() && this.placeholder) {
+      this.ngxSelect2ExService.clear();
+    }
+  }
+
+  shouldShowClearSelectionButton(): boolean {
+    return this.allowClear && this.selection && !!this.selection.length;
+  }
+
+  shouldShowPlaceholder(): boolean {
+    return (!this.selection || !this.selection.length) && !!this.placeholder;
+  }
+
+  getTitleTooltipText(): string {
+    if (this.selection && this.selection.length && this.selection[0].value) {
+      return this.selection[0].value;
+    } else if (this.placeholder) {
+      return this.placeholder;
+    } else {
+      return '';
+    }
   }
 
   private subscribeToSelection(): void {

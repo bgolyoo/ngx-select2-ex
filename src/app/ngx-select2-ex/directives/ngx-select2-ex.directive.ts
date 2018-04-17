@@ -20,7 +20,9 @@ export class NgxSelect2ExDirective {
   @HostListener('document:click', ['$event.target'])
   onClick(targetElement) {
     const dropdown = this.compRef ? this.compRef.location.nativeElement : null;
-    const clickedInside = this.el.nativeElement.contains(targetElement) || (dropdown && dropdown.contains(targetElement));
+    const clickedClearButton = targetElement.className === 'select2-selection__clear';
+    const clickedInside = !clickedClearButton &&
+      this.el.nativeElement.contains(targetElement) || (dropdown && dropdown.contains(targetElement));
 
     if (clickedInside && !this.service.isOpen) {
       this.service.isInFocus = true;

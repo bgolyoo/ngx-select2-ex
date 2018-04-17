@@ -108,7 +108,10 @@ export class NgxSelect2ExService {
   }
 
   clear() {
-    this.options.forEach((option: NgxSelect2ExOptionHandler) => option.selected = false);
+    const options = NgxSelect2ExOptionHandler.copyArray(this.options);
+    options.forEach((option: NgxSelect2ExOptionHandler) => option.selected = false);
+    this._options.next(options);
+    this._selection.next([]);
   }
 
 }
