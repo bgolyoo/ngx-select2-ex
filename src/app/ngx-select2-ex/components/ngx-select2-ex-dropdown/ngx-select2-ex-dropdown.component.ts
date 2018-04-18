@@ -37,12 +37,17 @@ export class NgxSelect2ExDropdownComponent implements OnInit, OnDestroy {
   }
 
   onOptionHover(hoveredOption: NgxSelect2ExOptionHandler): void {
-    this.options.forEach((option: NgxSelect2ExOptionHandler) => {
-      option.highlighted = option.id === hoveredOption.id;
-    });
+    if (!hoveredOption.disabled) {
+      this.options.forEach((option: NgxSelect2ExOptionHandler) => {
+        option.highlighted = option.id === hoveredOption.id;
+      });
+    }
   }
 
   onOptionClick(clickedOption: NgxSelect2ExOptionHandler): void {
+    if (clickedOption.disabled) {
+      return;
+    }
     if (!clickedOption.selected) {
       this.service.select(clickedOption);
     } else {

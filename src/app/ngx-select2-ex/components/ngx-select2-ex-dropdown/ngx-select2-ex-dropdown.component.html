@@ -7,7 +7,8 @@
     <span class="select2-results">
       <ul class="select2-results__options" role="tree" id="select2-results" aria-expanded="true" aria-hidden="false">
         <li *ngFor="let option of options" class="select2-results__option" [class.select2-results__option--highlighted]="option.highlighted"
-          role="treeitem" [attr.aria-selected]="option.selected" (mouseover)="onOptionHover(option)" (click)="onOptionClick(option)">
+          role="treeitem" [attr.aria-selected]="option.selected" [attr.aria-disabled]="option.disabled ? option.disabled : null"
+          (mouseover)="onOptionHover(option)" (mousedown)="onOptionClick(option)">
           {{option.value}}
         </li>
       </ul>

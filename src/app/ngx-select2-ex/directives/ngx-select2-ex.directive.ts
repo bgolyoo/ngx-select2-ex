@@ -17,21 +17,26 @@ export class NgxSelect2ExDirective {
     private ngxSelect2ExDropdownInjectionService: NgxSelect2ExDropdownInjectionService
   ) { }
 
-  @HostListener('document:click', ['$event.target'])
+  @HostListener('document:mouseup', ['$event.target'])
   onClick(targetElement) {
     const dropdown = this.compRef ? this.compRef.location.nativeElement : null;
     const clickedClearButton = targetElement.className === 'select2-selection__clear';
+    const clickedDisabledOption = targetElement.hasAttribute('aria-disabled');
     const clickedInside = !clickedClearButton &&
       this.el.nativeElement.contains(targetElement) || (dropdown && dropdown.contains(targetElement));
 
     if (clickedInside && !this.service.isOpen) {
-      this.service.isInFocus = true;
+      this.service.isInFocus = false;
       if (!this.service.disabled) {
         this.openDropdown();
       }
     } else if (clickedInside && this.service.isOpen) {
-      this.service.isInFocus = true;
-      this.closeDropdown();
+      if (clickedDisabledOption) {
+        this.service.isInFocus = false;
+      } else {
+        this.service.isInFocus = true;
+        this.closeDropdown();
+      }
     } else if (!clickedInside && this.service.isOpen) {
       this.service.isInFocus = false;
       this.closeDropdown();

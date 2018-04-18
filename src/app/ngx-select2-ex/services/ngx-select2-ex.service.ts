@@ -37,9 +37,11 @@ export class NgxSelect2ExService {
     options = NgxSelect2ExOptionHandler.copyArray(options);
     let selection: Array<NgxSelect2ExOptionHandler> = options.filter((option: NgxSelect2ExOptionHandler) => option.selected);
     if (selection.length === 0 && options.length) {
-      selection = [options.reverse().pop()];
-    }
-    if (selection.length > 1) {
+      const selectedOption = NgxSelect2ExOptionHandler.copyArray(options).reverse().pop();
+      options[options.findIndex(o => o.id === selectedOption.id)].selected = true;
+      this._options.next(options);
+      selection = [selectedOption];
+    } else if (selection.length > 1) {
       selection = [selection.pop()];
     }
     this._selection.next(selection);

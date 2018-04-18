@@ -18,7 +18,8 @@ export class AppComponent implements OnInit {
     },
     {
       id: '2',
-      value: 'Option2'
+      value: 'Option2',
+      disabled: true
     },
     {
       id: '3',
