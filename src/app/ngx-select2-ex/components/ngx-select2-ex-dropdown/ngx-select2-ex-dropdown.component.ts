@@ -15,6 +15,8 @@ export class NgxSelect2ExDropdownComponent implements OnInit, OnDestroy {
   @Input() service: NgxSelect2ExService;
   @Input() theme: string;
   @Input() minimumResultsForSearch: number;
+  @Input() minimumInputLength: number | null = null;
+  @Input() maximumInputLength: number | null = null;
   @Input() language: NgxSelect2ExLanguageInputs;
 
   @HostBinding('style.display') display = 'block';
@@ -71,8 +73,34 @@ export class NgxSelect2ExDropdownComponent implements OnInit, OnDestroy {
     return this.language.noResults();
   }
 
+  getInputTooShortMessage(): string {
+    return this.language.inputTooShort(this.minimumInputLength);
+  }
+
+  getInputTooLongMessage(): string {
+    return this.language.inputTooLong((this.search ? this.search.length : 0) - this.maximumInputLength);
+  }
+
   shouldShowNoResultsMessage(): boolean {
-    return !this.filterPipe.filterOptions(this.options, this.search).length;
+    return this.search &&
+      !this.filterPipe.filterOptions(this.options, this.search, this.minimumResultsForSearch).length &&
+      !this.shouldShowInputTooShortMessage() &&
+      !this.shouldShowInputTooLongMessage() &&
+      !this.shouldHideSearchBox();
+  }
+
+  shouldShowInputTooShortMessage(): boolean {
+    return this.minimumInputLength !== null &&
+      (!this.search || this.search && this.search.length < this.minimumInputLength) &&
+      !this.filterPipe.filterOptions(this.options, this.search, this.minimumResultsForSearch, this.minimumInputLength).length &&
+      !this.shouldHideSearchBox();
+  }
+
+  shouldShowInputTooLongMessage(): boolean {
+    return this.maximumInputLength !== null &&
+      this.search && this.maximumInputLength < this.search.length &&
+      !this.filterPipe.filterOptions(this.options, this.search, this.minimumResultsForSearch, null, this.maximumInputLength).length &&
+      !this.shouldHideSearchBox();
   }
 
   private subscribeToOptions() {

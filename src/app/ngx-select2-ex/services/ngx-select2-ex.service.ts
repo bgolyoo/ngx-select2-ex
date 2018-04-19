@@ -12,7 +12,9 @@ export class NgxSelect2ExService {
   disabled = false;
   theme = 'default';
   minimumResultsForSearch = 0;
-  language = new NgxSelect2ExLanguageInputs();
+  minimumInputLength: number | null = null;
+  maximumInputLength: number | null = null;
+  language: NgxSelect2ExLanguageInputs = new NgxSelect2ExLanguageInputs();
 
   private _options: BehaviorSubject<Array<NgxSelect2ExOption>> = new BehaviorSubject([]);
   private _boundingClientRect: ReplaySubject<ClientRect> = new ReplaySubject(1);

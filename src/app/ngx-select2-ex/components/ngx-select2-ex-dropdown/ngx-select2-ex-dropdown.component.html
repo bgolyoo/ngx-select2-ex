@@ -12,7 +12,7 @@
     </span>
     <span class="select2-results">
       <ul class="select2-results__options" role="tree" id="select2-results" aria-expanded="true" aria-hidden="false">
-        <li *ngFor="let option of options | ngxSelect2OptionFilter: search"
+        <li *ngFor="let option of options | ngxSelect2OptionFilter: search:minimumResultsForSearch:minimumInputLength:maximumInputLength"
           class="select2-results__option"
           [class.select2-results__option--highlighted]="option.highlighted"
           role="treeitem"
@@ -27,6 +27,18 @@
           aria-live="assertive"
           class="select2-results__option select2-results__message">
           {{getNoResultsMessage()}}
+        </li>
+        <li *ngIf="shouldShowInputTooShortMessage()"
+          role="treeitem"
+          aria-live="assertive"
+          class="select2-results__option select2-results__message">
+          {{getInputTooShortMessage()}}
+        </li>
+        <li *ngIf="shouldShowInputTooLongMessage()"
+          role="treeitem"
+          aria-live="assertive"
+          class="select2-results__option select2-results__message">
+          {{getInputTooLongMessage()}}
         </li>
       </ul>
     </span>

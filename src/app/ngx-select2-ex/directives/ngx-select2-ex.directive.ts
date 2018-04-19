@@ -58,6 +58,8 @@ export class NgxSelect2ExDirective {
       service: this.service,
       theme: this.service.theme,
       minimumResultsForSearch: this.service.minimumResultsForSearch,
+      minimumInputLength: this.service.minimumInputLength,
+      maximumInputLength: this.service.maximumInputLength,
       language: this.service.language
     });
     this.setFocusForSearchField(this.compRef.location.nativeElement);

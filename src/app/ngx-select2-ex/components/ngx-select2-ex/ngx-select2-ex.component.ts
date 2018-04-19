@@ -4,6 +4,7 @@ import { NgxSelect2ExOptionHandler } from '../../classes/ngx-select2-ex-option-h
 import { NgxSelect2ExService } from '../../services/ngx-select2-ex.service';
 import { Subscription } from 'rxjs/Subscription';
 import { INgxSelect2ExLanguageInputs } from '../../interfaces/ngx-select2-ex-language-inputs';
+import { NgxSelect2ExLanguageInputs } from '../../classes/ngx-select2-ex-language-inputs';
 
 @Component({
   selector: 'app-ngx-select2-ex',
@@ -20,13 +21,17 @@ import { INgxSelect2ExLanguageInputs } from '../../interfaces/ngx-select2-ex-lan
 })
 export class NgxSelect2ExComponent implements OnInit, OnChanges, OnDestroy, ControlValueAccessor {
 
-  @Input() options: Array<NgxSelect2ExOptionHandler>;
-  @Input() disabled: boolean;
-  @Input() theme: string;
-  @Input() minimumResultsForSearch: number;
+  @Input() options: Array<NgxSelect2ExOptionHandler> | null = null;
+  @Input() disabled: boolean | null = null;
+
+  @Input() theme: string | null = null;
+  @Input() minimumResultsForSearch: number | null = null;
+  @Input() minimumInputLength: number | null = null;
+  @Input() maximumInputLength: number | null = null;
+  @Input() language: INgxSelect2ExLanguageInputs | null = null;
+
   @Input() allowClear = false;
-  @Input() placeholder: string;
-  @Input() language: INgxSelect2ExLanguageInputs;
+  @Input() placeholder: string | null = null;
 
   isOpen: boolean;
   isInFocus: boolean;
@@ -38,6 +43,7 @@ export class NgxSelect2ExComponent implements OnInit, OnChanges, OnDestroy, Cont
   constructor(public ngxSelect2ExService: NgxSelect2ExService) { }
 
   ngOnInit() {
+    this.initStaticInputValues();
     this.subscribeToSelection();
     this.subscribeToIsOpen();
     this.subscribeToIsInFocus();
@@ -52,10 +58,6 @@ export class NgxSelect2ExComponent implements OnInit, OnChanges, OnDestroy, Cont
       changes['disabled'].previousValue !== changes['disabled'].currentValue) {
       this.ngxSelect2ExService.disabled = changes['disabled'].currentValue;
     }
-
-    this.defaultChangeListener(changes, 'theme');
-    this.defaultChangeListener(changes, 'minimumResultsForSearch');
-    this.defaultChangeListener(changes, 'language');
   }
 
   ngOnDestroy() {
@@ -127,6 +129,23 @@ export class NgxSelect2ExComponent implements OnInit, OnChanges, OnDestroy, Cont
   private defaultChangeListener(changes: SimpleChanges, fieldName: string) {
     if (changes[fieldName] && changes[fieldName].previousValue !== changes[fieldName].currentValue) {
       this.ngxSelect2ExService[fieldName] = changes[fieldName].currentValue;
+    }
+  }
+
+  private initStaticInputValues() {
+    this.defaultInputSetter('theme');
+    this.defaultInputSetter('minimumResultsForSearch');
+    this.defaultInputSetter('minimumInputLength');
+    this.defaultInputSetter('maximumInputLength',
+      this.minimumInputLength && this.maximumInputLength && this.maximumInputLength < this.minimumInputLength ?
+        this.minimumInputLength :
+        this.maximumInputLength);
+    this.defaultInputSetter('language', new NgxSelect2ExLanguageInputs(this.language));
+  }
+
+  private defaultInputSetter(inputField: string, optionalValue?: any) {
+    if (this[inputField] !== null) {
+      this.ngxSelect2ExService[inputField] = optionalValue ? optionalValue : this[inputField];
     }
   }
 
