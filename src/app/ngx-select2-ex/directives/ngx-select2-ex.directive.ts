@@ -22,6 +22,8 @@ export class NgxSelect2ExDirective {
     const dropdown = this.compRef ? this.compRef.location.nativeElement : null;
     const clickedClearButton = targetElement.className === 'select2-selection__clear';
     const clickedDisabledOption = targetElement.hasAttribute('aria-disabled');
+    const clickedNoOptionListItem = targetElement.className.includes('select2-results__message');
+    const clickedSearchField = targetElement.className.includes('select2-search__field');
     const clickedInside = !clickedClearButton &&
       this.el.nativeElement.contains(targetElement) || (dropdown && dropdown.contains(targetElement));
 
@@ -31,7 +33,7 @@ export class NgxSelect2ExDirective {
         this.openDropdown();
       }
     } else if (clickedInside && this.service.isOpen) {
-      if (clickedDisabledOption) {
+      if (clickedDisabledOption || clickedNoOptionListItem || clickedSearchField) {
         this.service.isInFocus = false;
       } else {
         this.service.isInFocus = true;
@@ -55,7 +57,8 @@ export class NgxSelect2ExDirective {
     this.compRef = this.ngxSelect2ExDropdownInjectionService.appendComponent(NgxSelect2ExDropdownComponent, {
       service: this.service,
       theme: this.service.theme,
-      minimumResultsForSearch: this.service.minimumResultsForSearch
+      minimumResultsForSearch: this.service.minimumResultsForSearch,
+      language: this.service.language
     });
     this.setFocusForSearchField(this.compRef.location.nativeElement);
     this.service.isOpen = true;

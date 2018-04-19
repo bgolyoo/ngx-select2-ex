@@ -4,6 +4,7 @@ import { NgxSelect2ExOptionHandler } from '../classes/ngx-select2-ex-option-hand
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
+import { NgxSelect2ExLanguageInputs } from '../classes/ngx-select2-ex-language-inputs';
 
 @Injectable()
 export class NgxSelect2ExService {
@@ -11,6 +12,7 @@ export class NgxSelect2ExService {
   disabled = false;
   theme = 'default';
   minimumResultsForSearch = 0;
+  language = new NgxSelect2ExLanguageInputs();
 
   private _options: BehaviorSubject<Array<NgxSelect2ExOption>> = new BehaviorSubject([]);
   private _boundingClientRect: ReplaySubject<ClientRect> = new ReplaySubject(1);

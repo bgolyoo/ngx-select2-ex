@@ -2,6 +2,8 @@ import { Component, OnInit, HostBinding, OnDestroy, Input } from '@angular/core'
 import { Subscription } from 'rxjs/Subscription';
 import { NgxSelect2ExService } from '../../services/ngx-select2-ex.service';
 import { NgxSelect2ExOptionHandler } from '../../classes/ngx-select2-ex-option-handler';
+import { NgxSelect2ExLanguageInputs } from '../../classes/ngx-select2-ex-language-inputs';
+import { NgxSelect2OptionFilterPipe } from '../../pipes/ngx-select2-option-filter.pipe';
 
 @Component({
   selector: 'app-ngx-select2-ex-dropdown',
@@ -13,6 +15,7 @@ export class NgxSelect2ExDropdownComponent implements OnInit, OnDestroy {
   @Input() service: NgxSelect2ExService;
   @Input() theme: string;
   @Input() minimumResultsForSearch: number;
+  @Input() language: NgxSelect2ExLanguageInputs;
 
   @HostBinding('style.display') display = 'block';
   @HostBinding('style.position') position = 'absolute';
@@ -22,10 +25,11 @@ export class NgxSelect2ExDropdownComponent implements OnInit, OnDestroy {
   @HostBinding('style.width') width;
 
   options: Array<NgxSelect2ExOptionHandler> = [];
+  search: string;
 
   private subscriptions: Array<Subscription> = [];
 
-  constructor() { }
+  constructor(private filterPipe: NgxSelect2OptionFilterPipe) { }
 
   ngOnInit() {
     this.subscribeToOptions();
@@ -61,6 +65,14 @@ export class NgxSelect2ExDropdownComponent implements OnInit, OnDestroy {
 
   shouldHideSearchBox(): boolean {
     return this.options.length < this.minimumResultsForSearch;
+  }
+
+  getNoResultsMessage(): string {
+    return this.language.noResults();
+  }
+
+  shouldShowNoResultsMessage(): boolean {
+    return !this.filterPipe.filterOptions(this.options, this.search).length;
   }
 
   private subscribeToOptions() {

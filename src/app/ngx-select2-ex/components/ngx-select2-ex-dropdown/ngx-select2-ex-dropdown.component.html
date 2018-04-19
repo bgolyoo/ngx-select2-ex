@@ -1,15 +1,32 @@
 <span class="select2-container" [ngClass]="getContainerThemeClass()" [class.select2-container--open]="true">
   <span id="select2-dropdown" class="select2-dropdown select2-dropdown--below" dir="ltr">
     <span class="select2-search select2-search--dropdown" [class.select2-search--hide]="shouldHideSearchBox()">
-      <input class="select2-search__field" type="search" tabindex="0" autocomplete="off" autocorrect="off" autocapitalize="off"
-        spellcheck="false" role="textbox">
+      <input class="select2-search__field"
+        type="search" tabindex="0"
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="off"
+        spellcheck="false"
+        role="textbox"
+        [(ngModel)]="search">
     </span>
     <span class="select2-results">
       <ul class="select2-results__options" role="tree" id="select2-results" aria-expanded="true" aria-hidden="false">
-        <li *ngFor="let option of options" class="select2-results__option" [class.select2-results__option--highlighted]="option.highlighted"
-          role="treeitem" [attr.aria-selected]="option.selected" [attr.aria-disabled]="option.disabled ? option.disabled : null"
-          (mouseover)="onOptionHover(option)" (mousedown)="onOptionClick(option)">
+        <li *ngFor="let option of options | ngxSelect2OptionFilter: search"
+          class="select2-results__option"
+          [class.select2-results__option--highlighted]="option.highlighted"
+          role="treeitem"
+          [attr.aria-selected]="option.selected"
+          [attr.aria-disabled]="option.disabled ? option.disabled : null"
+          (mouseover)="onOptionHover(option)"
+          (mousedown)="onOptionClick(option)">
           {{option.value}}
+        </li>
+        <li *ngIf="shouldShowNoResultsMessage()"
+          role="treeitem"
+          aria-live="assertive"
+          class="select2-results__option select2-results__message">
+          {{getNoResultsMessage()}}
         </li>
       </ul>
     </span>

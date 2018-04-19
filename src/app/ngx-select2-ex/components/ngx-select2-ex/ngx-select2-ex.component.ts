@@ -3,6 +3,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { NgxSelect2ExOptionHandler } from '../../classes/ngx-select2-ex-option-handler';
 import { NgxSelect2ExService } from '../../services/ngx-select2-ex.service';
 import { Subscription } from 'rxjs/Subscription';
+import { INgxSelect2ExLanguageInputs } from '../../interfaces/ngx-select2-ex-language-inputs';
 
 @Component({
   selector: 'app-ngx-select2-ex',
@@ -25,6 +26,7 @@ export class NgxSelect2ExComponent implements OnInit, OnChanges, OnDestroy, Cont
   @Input() minimumResultsForSearch: number;
   @Input() allowClear = false;
   @Input() placeholder: string;
+  @Input() language: INgxSelect2ExLanguageInputs;
 
   isOpen: boolean;
   isInFocus: boolean;
@@ -53,6 +55,7 @@ export class NgxSelect2ExComponent implements OnInit, OnChanges, OnDestroy, Cont
 
     this.defaultChangeListener(changes, 'theme');
     this.defaultChangeListener(changes, 'minimumResultsForSearch');
+    this.defaultChangeListener(changes, 'language');
   }
 
   ngOnDestroy() {
