@@ -8,21 +8,42 @@
   [class.select2-container--disabled]="disabled"
   dir="ltr">
   <span class="selection">
-    <span class="select2-selection select2-selection--single"
+    <span class="select2-selection"
+      [class.select2-selection--single]="!multi"
+      [class.select2-selection--multiple]="multi"
       role="combobox"
       aria-haspopup="true"
       [attr.aria-expanded]="isOpen"
-      tabindex="0"
+      [tabindex]="multi ? -1 : 0"
       aria-labelledby="select2-container"
       aria-owns="select2-results">
-      <span class="select2-selection__rendered" id="select2-selection-container" [title]="getTitleTooltipText()">
+      <span *ngIf="!multi" class="select2-selection__rendered" id="select2-selection-container" [title]="getTitleTooltipText()">
         <span *ngIf="shouldShowPlaceholder()" class="select2-selection__placeholder">{{placeholder}}</span>
         <span *ngIf="shouldShowClearSelectionButton()" class="select2-selection__clear" (click)="clearSelection()">×</span>
         {{selection[0]?.value}}
       </span>
-      <span class="select2-selection__arrow" role="presentation">
+      <span *ngIf="!multi" class="select2-selection__arrow" role="presentation">
         <b role="presentation"></b>
       </span>
+      <ul *ngIf="multi" class="select2-selection__rendered">
+        <li *ngFor="let selectionItem of selection" class="select2-selection__choice" [title]="selectionItem.value">
+          <span class="select2-selection__choice__remove" role="presentation" (click)="deselect(selectionItem)">×</span>
+          {{selectionItem.value}}
+        </li>
+        <li class="select2-search select2-search--inline">
+          <input class="select2-search__field"
+            type="search"
+            tabindex="0"
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="off"
+            spellcheck="false"
+            role="textbox"
+            aria-autocomplete="list"
+            placeholder=""
+            [ngStyle]="getStyleOfInlineInput(search)"
+            [(ngModel)]="search"></li>
+      </ul>
     </span>
   </span>
   <span class="dropdown-wrapper" aria-hidden="true"></span>

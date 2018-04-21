@@ -24,6 +24,7 @@ export class NgxSelect2ExComponent implements OnInit, OnChanges, OnDestroy, Cont
   @Input() options: Array<NgxSelect2ExOptionHandler> | null = null;
   @Input() disabled: boolean | null = null;
 
+  @Input() multi: boolean | null = null;
   @Input() theme: string | null = null;
   @Input() minimumResultsForSearch: number | null = null;
   @Input() minimumInputLength: number | null = null;
@@ -36,6 +37,14 @@ export class NgxSelect2ExComponent implements OnInit, OnChanges, OnDestroy, Cont
   isOpen: boolean;
   isInFocus: boolean;
   selection: Array<NgxSelect2ExOptionHandler> = [];
+
+  set search(search: string) {
+    this.ngxSelect2ExService.search = search;
+  }
+
+  get search(): string {
+    return this.ngxSelect2ExService.search;
+  }
 
   private subscriptions: Array<Subscription> = [];
   private propagateChange = (_: any) => { };
@@ -83,6 +92,11 @@ export class NgxSelect2ExComponent implements OnInit, OnChanges, OnDestroy, Cont
     return 'select2-container--' + this.ngxSelect2ExService.theme;
   }
 
+  getStyleOfInlineInput(search: string) {
+    const width = search ? `${((search.length + 1) * 0.75)}em` : '0.75em';
+    return { 'width': width };
+  }
+
   clearSelection() {
     if (this.shouldShowClearSelectionButton() && this.placeholder) {
       this.ngxSelect2ExService.clear();
@@ -105,6 +119,10 @@ export class NgxSelect2ExComponent implements OnInit, OnChanges, OnDestroy, Cont
     } else {
       return '';
     }
+  }
+
+  deselect(optionHandlerToDeselect: NgxSelect2ExOptionHandler) {
+    this.ngxSelect2ExService.deselect(optionHandlerToDeselect);
   }
 
   private subscribeToSelection(): void {
@@ -133,6 +151,7 @@ export class NgxSelect2ExComponent implements OnInit, OnChanges, OnDestroy, Cont
   }
 
   private initStaticInputValues() {
+    this.defaultInputSetter('multi');
     this.defaultInputSetter('theme');
     this.defaultInputSetter('minimumResultsForSearch');
     this.defaultInputSetter('minimumInputLength');

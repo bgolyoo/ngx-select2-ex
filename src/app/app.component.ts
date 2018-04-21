@@ -23,11 +23,13 @@ export class AppComponent implements OnInit {
     },
     {
       id: '3',
-      value: 'Option3'
+      value: 'Option3',
+      selected: true
     },
     {
       id: '4',
-      value: 'Option4'
+      value: 'Option4',
+      selected: true
     },
     {
       id: '5',

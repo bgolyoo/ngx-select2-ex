@@ -9,6 +9,7 @@ import { NgxSelect2ExLanguageInputs } from '../classes/ngx-select2-ex-language-i
 @Injectable()
 export class NgxSelect2ExService {
 
+  multi: boolean | null = null;
   disabled = false;
   theme = 'default';
   minimumResultsForSearch = 0;
@@ -21,6 +22,7 @@ export class NgxSelect2ExService {
   private _isOpen: BehaviorSubject<boolean> = new BehaviorSubject(false);
   private _isInFocus: BehaviorSubject<boolean> = new BehaviorSubject(false);
   private _selection: BehaviorSubject<Array<NgxSelect2ExOptionHandler>> = new BehaviorSubject([]);
+  private _search: BehaviorSubject<string> = new BehaviorSubject(null);
 
   constructor() { }
 
@@ -40,15 +42,19 @@ export class NgxSelect2ExService {
   set selection(options: Array<NgxSelect2ExOptionHandler>) {
     options = NgxSelect2ExOptionHandler.copyArray(options);
     let selection: Array<NgxSelect2ExOptionHandler> = options.filter((option: NgxSelect2ExOptionHandler) => option.selected);
-    if (selection.length === 0 && options.length) {
-      const selectedOption = NgxSelect2ExOptionHandler.copyArray(options).reverse().pop();
-      options[options.findIndex(o => o.id === selectedOption.id)].selected = true;
-      this._options.next(options);
-      selection = [selectedOption];
-    } else if (selection.length > 1) {
-      selection = [selection.pop()];
+    if (this.multi) {
+      this._selection.next(selection);
+    } else {
+      if (selection.length === 0 && options.length) {
+        const selectedOption = NgxSelect2ExOptionHandler.copyArray(options).reverse().pop();
+        options[options.findIndex(o => o.id === selectedOption.id)].selected = true;
+        this._options.next(options);
+        selection = [selectedOption];
+      } else if (selection.length > 1) {
+        selection = [selection.pop()];
+      }
+      this._selection.next(selection);
     }
-    this._selection.next(selection);
   }
 
   get selection(): Array<NgxSelect2ExOptionHandler> {
@@ -91,6 +97,18 @@ export class NgxSelect2ExService {
     return this._isInFocus.asObservable();
   }
 
+  set search(search: string) {
+    this._search.next(search);
+  }
+
+  get search(): string {
+    return this._search.getValue();
+  }
+
+  getSearchAsObservable(): Observable<string> {
+    return this._search.asObservable();
+  }
+
   open() {
     this.isOpen = true;
   }
@@ -100,7 +118,9 @@ export class NgxSelect2ExService {
   }
 
   select(optionHandlerToSelect: NgxSelect2ExOptionHandler) {
-    this.options.forEach((option: NgxSelect2ExOptionHandler) => option.selected = false);
+    if (!this.multi) {
+      this.options.forEach((option: NgxSelect2ExOptionHandler) => option.selected = false);
+    }
     const indexOfSelected = this.options.findIndex((option: NgxSelect2ExOptionHandler) => option.id === optionHandlerToSelect.id);
     if (indexOfSelected > -1) {
       const options = NgxSelect2ExOptionHandler.copyArray(this.options);
@@ -109,8 +129,17 @@ export class NgxSelect2ExService {
     }
   }
 
-  deselect(optionHandlerToDeSelect: NgxSelect2ExOptionHandler) {
-    return;
+  deselect(optionHandlerToDeselect: NgxSelect2ExOptionHandler) {
+    if (!this.multi) {
+      return;
+    } else {
+      const indexOfDeselected = this.options.findIndex((option: NgxSelect2ExOptionHandler) => option.id === optionHandlerToDeselect.id);
+      if (indexOfDeselected > -1) {
+        const options = NgxSelect2ExOptionHandler.copyArray(this.options);
+        options[indexOfDeselected].selected = false;
+        this.options = options;
+      }
+    }
   }
 
   clear() {

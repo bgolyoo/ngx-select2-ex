@@ -1,6 +1,6 @@
 <span class="select2-container" [ngClass]="getContainerThemeClass()" [class.select2-container--open]="true">
   <span id="select2-dropdown" class="select2-dropdown select2-dropdown--below" dir="ltr">
-    <span class="select2-search select2-search--dropdown" [class.select2-search--hide]="shouldHideSearchBox()">
+    <span *ngIf="!multi" class="select2-search select2-search--dropdown" [class.select2-search--hide]="shouldHideSearchBox()">
       <input class="select2-search__field"
         type="search" tabindex="0"
         autocomplete="off"

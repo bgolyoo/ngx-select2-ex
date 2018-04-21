@@ -13,6 +13,7 @@ import { NgxSelect2OptionFilterPipe } from '../../pipes/ngx-select2-option-filte
 export class NgxSelect2ExDropdownComponent implements OnInit, OnDestroy {
 
   @Input() service: NgxSelect2ExService;
+  @Input() multi: boolean | null = null;
   @Input() theme: string;
   @Input() minimumResultsForSearch: number;
   @Input() minimumInputLength: number | null = null;
@@ -36,6 +37,7 @@ export class NgxSelect2ExDropdownComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.subscribeToOptions();
     this.subscribeToBoundingClientRectChanges();
+    this.subscribeToSearchChanges();
   }
 
   ngOnDestroy() {
@@ -66,7 +68,7 @@ export class NgxSelect2ExDropdownComponent implements OnInit, OnDestroy {
   }
 
   shouldHideSearchBox(): boolean {
-    return this.options.length < this.minimumResultsForSearch;
+    return this.options.length < this.minimumResultsForSearch || this.multi;
   }
 
   getNoResultsMessage(): string {
@@ -86,7 +88,7 @@ export class NgxSelect2ExDropdownComponent implements OnInit, OnDestroy {
       !this.filterPipe.filterOptions(this.options, this.search, this.minimumResultsForSearch).length &&
       !this.shouldShowInputTooShortMessage() &&
       !this.shouldShowInputTooLongMessage() &&
-      !this.shouldHideSearchBox();
+      (this.multi || !this.shouldHideSearchBox());
   }
 
   shouldShowInputTooShortMessage(): boolean {
@@ -113,6 +115,12 @@ export class NgxSelect2ExDropdownComponent implements OnInit, OnDestroy {
   private subscribeToBoundingClientRectChanges() {
     this.subscriptions.push(this.service.getBoundingClientRectAsObservable().subscribe(
       (boundingClientRect: ClientRect) => this.initBoundingClientRectParams(boundingClientRect)
+    ));
+  }
+
+  private subscribeToSearchChanges() {
+    this.subscriptions.push(this.service.getSearchAsObservable().subscribe(
+      (search: string) => this.search = search
     ));
   }
 

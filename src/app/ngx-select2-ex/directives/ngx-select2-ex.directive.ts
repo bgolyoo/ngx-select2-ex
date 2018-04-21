@@ -1,21 +1,33 @@
-import { Directive, ComponentRef, ElementRef, HostListener, Input } from '@angular/core';
+import { Directive, ComponentRef, ElementRef, HostListener, Input, OnInit, OnDestroy, Renderer2 } from '@angular/core';
 import { NgxSelect2ExDropdownComponent } from '../components/ngx-select2-ex-dropdown/ngx-select2-ex-dropdown.component';
 import { NgxSelect2ExService } from '../services/ngx-select2-ex.service';
 import { NgxSelect2ExDropdownInjectionService } from '../services/ngx-select2-ex-dropdown-injection.service';
+import { Subscription } from 'rxjs/Subscription';
 
 @Directive({
   selector: '[appNgxSelect2Ex]'
 })
-export class NgxSelect2ExDirective {
+export class NgxSelect2ExDirective implements OnInit, OnDestroy {
 
   @Input() service: NgxSelect2ExService;
 
   private compRef: ComponentRef<NgxSelect2ExDropdownComponent>;
+  private subscriptions: Array<Subscription> = [];
 
   constructor(
     private el: ElementRef,
+    private renderer: Renderer2,
     private ngxSelect2ExDropdownInjectionService: NgxSelect2ExDropdownInjectionService
   ) { }
+
+  ngOnInit() {
+    this.updateBoundingClientRect();
+    this.subscribeToSearchChanges();
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach((subscription: Subscription) => subscription.unsubscribe());
+  }
 
   @HostListener('document:mouseup', ['$event.target'])
   onClick(targetElement) {
@@ -24,8 +36,16 @@ export class NgxSelect2ExDirective {
     const clickedDisabledOption = targetElement.hasAttribute('aria-disabled');
     const clickedNoOptionListItem = targetElement.className.includes('select2-results__message');
     const clickedSearchField = targetElement.className.includes('select2-search__field');
+    const clickedRemoveChoice = targetElement.className.includes('select2-selection__choice__remove');
     const clickedInside = !clickedClearButton &&
       this.el.nativeElement.contains(targetElement) || (dropdown && dropdown.contains(targetElement));
+
+    if (clickedInside) {
+      this.setFocusForSearchField(targetElement);
+      if (this.service.multi && !clickedNoOptionListItem) {
+        this.service.search = null;
+      }
+    }
 
     if (clickedInside && !this.service.isOpen) {
       this.service.isInFocus = false;
@@ -37,7 +57,9 @@ export class NgxSelect2ExDirective {
         this.service.isInFocus = false;
       } else {
         this.service.isInFocus = true;
-        this.closeDropdown();
+        if (!clickedRemoveChoice) {
+          this.closeDropdown();
+        }
       }
     } else if (!clickedInside && this.service.isOpen) {
       this.service.isInFocus = false;
@@ -49,20 +71,20 @@ export class NgxSelect2ExDirective {
 
   @HostListener('window:resize')
   resize() {
-    this.service.boundingClientRect = this.el.nativeElement.getBoundingClientRect();
+    this.updateBoundingClientRect();
   }
 
   private openDropdown() {
-    this.service.boundingClientRect = this.el.nativeElement.getBoundingClientRect();
+    this.updateBoundingClientRect();
     this.compRef = this.ngxSelect2ExDropdownInjectionService.appendComponent(NgxSelect2ExDropdownComponent, {
       service: this.service,
+      multi: this.service.multi,
       theme: this.service.theme,
       minimumResultsForSearch: this.service.minimumResultsForSearch,
       minimumInputLength: this.service.minimumInputLength,
       maximumInputLength: this.service.maximumInputLength,
       language: this.service.language
     });
-    this.setFocusForSearchField(this.compRef.location.nativeElement);
     this.service.isOpen = true;
   }
 
@@ -75,10 +97,34 @@ export class NgxSelect2ExDirective {
   }
 
   private setFocusForSearchField(targetElement: any) {
-    const select2SearchField = targetElement ? targetElement.getElementsByClassName('select2-search__field') : null;
-    if (select2SearchField && select2SearchField.length) {
-      select2SearchField[0].focus();
+    const inlineSearchField = this.el.nativeElement ? this.el.nativeElement.getElementsByClassName('select2-search__field') : null;
+    const dropdownSearchField = targetElement ? targetElement.getElementsByClassName('select2-search__field') : null;
+    if (inlineSearchField && inlineSearchField.length) {
+      inlineSearchField[0].focus();
+    } else if (dropdownSearchField && dropdownSearchField.length) {
+      dropdownSearchField[0].focus();
     }
+  }
+
+  private subscribeToSearchChanges() {
+    this.subscriptions.push(this.service.getSearchAsObservable().subscribe(
+      (search) => {
+        if (this.service.multi) {
+          if (search && !this.service.isOpen) {
+            if (!this.service.disabled) {
+              this.openDropdown();
+            }
+          }
+          this.service.boundingClientRect = this.el.nativeElement.getBoundingClientRect();
+        }
+      }
+    ));
+  }
+
+  private updateBoundingClientRect() {
+    this.renderer.setStyle(this.el.nativeElement, 'width', '100%');
+    this.service.boundingClientRect = this.el.nativeElement.getBoundingClientRect();
+    this.renderer.setStyle(this.el.nativeElement, 'width', `${this.el.nativeElement.getBoundingClientRect().width}px`);
   }
 
 }
