@@ -45,14 +45,16 @@ export class NgxSelect2ExService {
     if (this.multi) {
       this._selection.next(selection);
     } else {
+      let selectedOption;
       if (selection.length === 0 && options.length) {
-        const selectedOption = NgxSelect2ExOptionHandler.copyArray(options).reverse().pop();
-        options[options.findIndex(o => o.id === selectedOption.id)].selected = true;
-        this._options.next(options);
-        selection = [selectedOption];
-      } else if (selection.length > 1) {
-        selection = [selection.pop()];
+        selectedOption = NgxSelect2ExOptionHandler.copyArray(options).reverse().pop();
+      } else if (selection.length > 0) {
+        selectedOption = selection.pop();
       }
+      options.forEach(o => o.selected = false);
+      options[options.findIndex(o => o.id === selectedOption.id)].selected = true;
+      this._options.next(options);
+      selection = [selectedOption];
       this._selection.next(selection);
     }
   }

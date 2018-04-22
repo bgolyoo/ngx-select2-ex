@@ -61,6 +61,7 @@ export class NgxSelect2ExDropdownComponent implements OnInit, OnDestroy {
     } else {
       this.service.deselect(clickedOption);
     }
+    this.service.search = null;
   }
 
   getContainerThemeClass(): string {

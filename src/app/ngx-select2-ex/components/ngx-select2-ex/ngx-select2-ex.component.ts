@@ -92,13 +92,25 @@ export class NgxSelect2ExComponent implements OnInit, OnChanges, OnDestroy, Cont
     return 'select2-container--' + this.ngxSelect2ExService.theme;
   }
 
+  getStyleOfSearchListItem() {
+    const width = (!this.selection || !this.selection.length) && this.placeholder ? '100%' : null;
+    return { 'width': width };
+  }
+
   getStyleOfInlineInput(search: string) {
+    if (!search && (!this.selection || !this.selection.length) && this.placeholder) {
+      return { 'width': '100%' };
+    }
     const width = search ? `${((search.length + 1) * 0.75)}em` : '0.75em';
     return { 'width': width };
   }
 
+  getInlineInputPlaceholder(): string {
+    return (!this.selection || !this.selection.length) && this.placeholder ? this.placeholder : '';
+  }
+
   clearSelection() {
-    if (this.shouldShowClearSelectionButton() && this.placeholder) {
+    if (this.shouldShowClearSelectionButton() && (!this.multi && this.placeholder || this.multi)) {
       this.ngxSelect2ExService.clear();
     }
   }

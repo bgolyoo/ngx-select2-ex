@@ -6,6 +6,7 @@ import { NgxSelect2ExDropdownComponent } from './components/ngx-select2-ex-dropd
 import { NgxSelect2ExService } from './services/ngx-select2-ex.service';
 import { NgxSelect2ExDropdownInjectionService } from './services/ngx-select2-ex-dropdown-injection.service';
 import { NgxSelect2ExDirective } from './directives/ngx-select2-ex.directive';
+import { NgxSelect2ExDropdownSearchFieldDirective } from './directives/ngx-select2-ex-dropdown-search-field.directive';
 import { NgxSelect2OptionFilterPipe } from './pipes/ngx-select2-option-filter.pipe';
 
 @NgModule({
@@ -17,6 +18,7 @@ import { NgxSelect2OptionFilterPipe } from './pipes/ngx-select2-option-filter.pi
     NgxSelect2ExComponent,
     NgxSelect2ExDropdownComponent,
     NgxSelect2ExDirective,
+    NgxSelect2ExDropdownSearchFieldDirective,
     NgxSelect2OptionFilterPipe
   ],
   exports: [NgxSelect2ExComponent],

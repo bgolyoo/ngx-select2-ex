@@ -37,15 +37,7 @@ export class NgxSelect2ExDirective implements OnInit, OnDestroy {
     const clickedNoOptionListItem = targetElement.className.includes('select2-results__message');
     const clickedSearchField = targetElement.className.includes('select2-search__field');
     const clickedRemoveChoice = targetElement.className.includes('select2-selection__choice__remove');
-    const clickedInside = !clickedClearButton &&
-      this.el.nativeElement.contains(targetElement) || (dropdown && dropdown.contains(targetElement));
-
-    if (clickedInside) {
-      this.setFocusForSearchField(targetElement);
-      if (this.service.multi && !clickedNoOptionListItem) {
-        this.service.search = null;
-      }
-    }
+    const clickedInside = this.el.nativeElement.contains(targetElement) || (dropdown && dropdown.contains(targetElement));
 
     if (clickedInside && !this.service.isOpen) {
       this.service.isInFocus = false;
@@ -53,7 +45,7 @@ export class NgxSelect2ExDirective implements OnInit, OnDestroy {
         this.openDropdown();
       }
     } else if (clickedInside && this.service.isOpen) {
-      if (clickedDisabledOption || clickedNoOptionListItem || clickedSearchField) {
+      if (clickedDisabledOption || clickedNoOptionListItem || clickedSearchField || clickedClearButton) {
         this.service.isInFocus = false;
       } else {
         this.service.isInFocus = true;
@@ -66,6 +58,13 @@ export class NgxSelect2ExDirective implements OnInit, OnDestroy {
       this.closeDropdown();
     } else if (!clickedInside && !this.service.isOpen) {
       this.service.isInFocus = false;
+    }
+
+    if (clickedInside) {
+      this.setFocusForSearchField(this.compRef ? this.compRef.location.nativeElement : null);
+      if (this.service.multi && !clickedNoOptionListItem) {
+        this.service.search = null;
+      }
     }
   }
 
@@ -98,11 +97,8 @@ export class NgxSelect2ExDirective implements OnInit, OnDestroy {
 
   private setFocusForSearchField(targetElement: any) {
     const inlineSearchField = this.el.nativeElement ? this.el.nativeElement.getElementsByClassName('select2-search__field') : null;
-    const dropdownSearchField = targetElement ? targetElement.getElementsByClassName('select2-search__field') : null;
     if (inlineSearchField && inlineSearchField.length) {
       inlineSearchField[0].focus();
-    } else if (dropdownSearchField && dropdownSearchField.length) {
-      dropdownSearchField[0].focus();
     }
   }
 

@@ -26,11 +26,12 @@
         <b role="presentation"></b>
       </span>
       <ul *ngIf="multi" class="select2-selection__rendered">
+        <span *ngIf="shouldShowClearSelectionButton()" class="select2-selection__clear" (click)="clearSelection()">×</span>
         <li *ngFor="let selectionItem of selection" class="select2-selection__choice" [title]="selectionItem.value">
           <span class="select2-selection__choice__remove" role="presentation" (click)="deselect(selectionItem)">×</span>
           {{selectionItem.value}}
         </li>
-        <li class="select2-search select2-search--inline">
+        <li class="select2-search select2-search--inline" [ngStyle]="getStyleOfSearchListItem()">
           <input class="select2-search__field"
             type="search"
             tabindex="0"
@@ -40,7 +41,7 @@
             spellcheck="false"
             role="textbox"
             aria-autocomplete="list"
-            placeholder=""
+            [placeholder]="getInlineInputPlaceholder()"
             [ngStyle]="getStyleOfInlineInput(search)"
             [(ngModel)]="search"></li>
       </ul>
