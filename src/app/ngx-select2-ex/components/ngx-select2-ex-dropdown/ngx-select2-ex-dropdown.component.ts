@@ -41,7 +41,8 @@ export class NgxSelect2ExDropdownComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.subscriptions.forEach((subscription: Subscription) => subscription.unsubscribe());
+    this.unsubscribe();
+    this.selectOnClose();
   }
 
   onOptionHover(hoveredOption: NgxSelect2ExOptionHandler): void {
@@ -133,6 +134,17 @@ export class NgxSelect2ExDropdownComponent implements OnInit, OnDestroy {
 
   private getBoundingClientRectParam(boundingClientRect, param: string): string {
     return boundingClientRect && boundingClientRect[param] ? boundingClientRect[param] + 'px' : '0px';
+  }
+
+  private selectOnClose() {
+    const highlightedOption: NgxSelect2ExOptionHandler = this.options.find((option: NgxSelect2ExOptionHandler) => option.highlighted);
+    if (highlightedOption && this.service.selectOnClose) {
+      this.service.select(highlightedOption);
+    }
+  }
+
+  private unsubscribe() {
+    this.subscriptions.forEach((subscription: Subscription) => subscription.unsubscribe());
   }
 
 }

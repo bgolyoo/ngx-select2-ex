@@ -16,6 +16,8 @@ export class NgxSelect2ExService {
   minimumInputLength: number | null = null;
   maximumInputLength: number | null = null;
   language: NgxSelect2ExLanguageInputs = new NgxSelect2ExLanguageInputs();
+  selectOnClose: boolean | null = false;
+  closeOnSelect: boolean | null = true;
 
   private _options: BehaviorSubject<Array<NgxSelect2ExOption>> = new BehaviorSubject([]);
   private _boundingClientRect: ReplaySubject<ClientRect> = new ReplaySubject(1);

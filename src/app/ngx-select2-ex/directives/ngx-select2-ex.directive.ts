@@ -26,7 +26,7 @@ export class NgxSelect2ExDirective implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.subscriptions.forEach((subscription: Subscription) => subscription.unsubscribe());
+    this.unsubscribe();
   }
 
   @HostListener('document:mouseup', ['$event.target'])
@@ -37,7 +37,8 @@ export class NgxSelect2ExDirective implements OnInit, OnDestroy {
     const clickedNoOptionListItem = targetElement.className.includes('select2-results__message');
     const clickedSearchField = targetElement.className.includes('select2-search__field');
     const clickedRemoveChoice = targetElement.className.includes('select2-selection__choice__remove');
-    const clickedInside = this.el.nativeElement.contains(targetElement) || (dropdown && dropdown.contains(targetElement));
+    const clickedDropdown = dropdown && dropdown.contains(targetElement);
+    const clickedInside = this.el.nativeElement.contains(targetElement) || clickedDropdown;
 
     if (clickedInside && !this.service.isOpen) {
       this.service.isInFocus = false;
@@ -48,9 +49,11 @@ export class NgxSelect2ExDirective implements OnInit, OnDestroy {
       if (clickedDisabledOption || clickedNoOptionListItem || clickedSearchField || clickedClearButton) {
         this.service.isInFocus = false;
       } else {
-        this.service.isInFocus = true;
-        if (!clickedRemoveChoice) {
-          this.closeDropdown();
+        if (this.service.closeOnSelect || !clickedDropdown) {
+          this.service.isInFocus = true;
+          if (!clickedRemoveChoice) {
+            this.closeDropdown();
+          }
         }
       }
     } else if (!clickedInside && this.service.isOpen) {
@@ -121,6 +124,10 @@ export class NgxSelect2ExDirective implements OnInit, OnDestroy {
     this.renderer.setStyle(this.el.nativeElement, 'width', '100%');
     this.service.boundingClientRect = this.el.nativeElement.getBoundingClientRect();
     this.renderer.setStyle(this.el.nativeElement, 'width', `${this.el.nativeElement.getBoundingClientRect().width}px`);
+  }
+
+  private unsubscribe() {
+    this.subscriptions.forEach((subscription: Subscription) => subscription.unsubscribe());
   }
 
 }

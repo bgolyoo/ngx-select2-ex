@@ -30,6 +30,8 @@ export class NgxSelect2ExComponent implements OnInit, OnChanges, OnDestroy, Cont
   @Input() minimumInputLength: number | null = null;
   @Input() maximumInputLength: number | null = null;
   @Input() language: INgxSelect2ExLanguageInputs | null = null;
+  @Input() selectOnClose: boolean | null = false;
+  @Input() closeOnSelect: boolean | null = true;
 
   @Input() allowClear = false;
   @Input() placeholder: string | null = null;
@@ -70,7 +72,7 @@ export class NgxSelect2ExComponent implements OnInit, OnChanges, OnDestroy, Cont
   }
 
   ngOnDestroy() {
-    this.subscriptions.forEach((subscription: Subscription) => subscription.unsubscribe());
+    this.unsubscribe();
   }
 
   writeValue(value: Array<NgxSelect2ExOptionHandler>) {
@@ -172,12 +174,18 @@ export class NgxSelect2ExComponent implements OnInit, OnChanges, OnDestroy, Cont
         this.minimumInputLength :
         this.maximumInputLength);
     this.defaultInputSetter('language', new NgxSelect2ExLanguageInputs(this.language));
+    this.defaultInputSetter('selectOnClose');
+    this.defaultInputSetter('closeOnSelect');
   }
 
   private defaultInputSetter(inputField: string, optionalValue?: any) {
     if (this[inputField] !== null) {
       this.ngxSelect2ExService[inputField] = optionalValue ? optionalValue : this[inputField];
     }
+  }
+
+  private unsubscribe() {
+    this.subscriptions.forEach((subscription: Subscription) => subscription.unsubscribe());
   }
 
 }
