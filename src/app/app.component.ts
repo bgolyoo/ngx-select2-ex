@@ -36,6 +36,7 @@ export class AppComponent implements OnInit {
       value: 'Option5'
     }
   ];
+  ngxStringOptions: Array<any> = ['stringOptions1', 'stringOptions2', 'stringOptions3'];
 
   ngxOptionsSecond: Array<INgxSelect2ExOption> = [
     {

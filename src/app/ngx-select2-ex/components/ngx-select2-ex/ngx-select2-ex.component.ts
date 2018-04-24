@@ -5,6 +5,7 @@ import { NgxSelect2ExService } from '../../services/ngx-select2-ex.service';
 import { Subscription } from 'rxjs/Subscription';
 import { INgxSelect2ExLanguageInputs } from '../../interfaces/ngx-select2-ex-language-inputs';
 import { NgxSelect2ExLanguageInputs } from '../../classes/ngx-select2-ex-language-inputs';
+import { INgxSelect2ExOption } from '../../interfaces/ngx-select2-ex-option';
 
 @Component({
   selector: 'app-ngx-select2-ex',
@@ -21,7 +22,7 @@ import { NgxSelect2ExLanguageInputs } from '../../classes/ngx-select2-ex-languag
 })
 export class NgxSelect2ExComponent implements OnInit, OnChanges, OnDestroy, ControlValueAccessor {
 
-  @Input() options: Array<NgxSelect2ExOptionHandler> | null = null;
+  @Input() options: Array<INgxSelect2ExOption> | Array<string> | null = null;
   @Input() disabled: boolean | null = null;
 
   @Input() multi: boolean | null = null;
@@ -63,7 +64,7 @@ export class NgxSelect2ExComponent implements OnInit, OnChanges, OnDestroy, Cont
   ngOnChanges(changes: SimpleChanges) {
     if (changes['options'] && changes['options'].currentValue.length &&
       changes['options'].previousValue !== changes['options'].currentValue) {
-      this.ngxSelect2ExService.options = changes['options'].currentValue;
+      this.initOptions(changes['options'].currentValue);
     }
     if (changes['disabled'] !== undefined &&
       changes['disabled'].previousValue !== changes['disabled'].currentValue) {
@@ -75,8 +76,8 @@ export class NgxSelect2ExComponent implements OnInit, OnChanges, OnDestroy, Cont
     this.unsubscribe();
   }
 
-  writeValue(value: Array<NgxSelect2ExOptionHandler>) {
-    this.ngxSelect2ExService.options = value;
+  writeValue(value: Array<INgxSelect2ExOption> | Array<string>) {
+    this.initOptions(value);
   }
 
   registerOnChange(fn: any) {
@@ -156,6 +157,32 @@ export class NgxSelect2ExComponent implements OnInit, OnChanges, OnDestroy, Cont
   private subscribeToIsInFocus(): void {
     this.subscriptions.push(this.ngxSelect2ExService.getIsInFocusAsObservable()
       .subscribe((isInFocus: boolean) => this.isInFocus = isInFocus));
+  }
+
+  private initOptions(options: Array<INgxSelect2ExOption> | Array<string>) {
+    if (this.isStringList(options)) {
+      this.ngxSelect2ExService.options = options.map(
+        (option: string, index: number) => new NgxSelect2ExOptionHandler(index, option)
+      );
+    } else if (this.isOptionInterfaceList(options)) {
+      this.ngxSelect2ExService.options = options.map(
+        (option: INgxSelect2ExOption) => new NgxSelect2ExOptionHandler(option.id, option.value, option.disabled, option.selected)
+      );
+    } else {
+      throw new Error('Input for options array should be of type Array<string> or Array<INgxSelect2ExOption>.');
+    }
+  }
+
+  private isStringList(list: Array<any> | null): list is Array<string> {
+    return list && list.every((item: any) => {
+      return typeof item === 'string';
+    });
+  }
+
+  private isOptionInterfaceList(list: Array<any> | null): list is Array<INgxSelect2ExOption> {
+    return list && list.every((item: any) => {
+      return 'id' in item && 'value' in item;
+    });
   }
 
   private defaultChangeListener(changes: SimpleChanges, fieldName: string) {
