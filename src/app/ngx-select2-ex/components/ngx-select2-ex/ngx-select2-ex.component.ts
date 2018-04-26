@@ -113,7 +113,7 @@ export class NgxSelect2ExComponent implements OnInit, OnChanges, OnDestroy, Cont
   }
 
   clearSelection() {
-    if (this.shouldShowClearSelectionButton() && (!this.multi && this.placeholder || this.multi)) {
+    if (this.shouldShowClearSelectionButton() && (!this.multi && this.placeholder || this.multi) && !this.disabled) {
       this.ngxSelect2ExService.clear();
     }
   }

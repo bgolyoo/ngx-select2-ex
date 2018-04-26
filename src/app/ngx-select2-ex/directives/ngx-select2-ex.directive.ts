@@ -68,7 +68,9 @@ export class NgxSelect2ExDirective implements OnInit, OnDestroy {
     }
 
     if (clickedInside) {
-      this.setFocusForSearchField(this.compRef ? this.compRef.location.nativeElement : null);
+      if (!this.service.disabled) {
+        this.setFocusForSearchField(this.compRef ? this.compRef.location.nativeElement : null);
+      }
       if (this.service.multi && !clickedNoOptionListItem) {
         this.service.search = null;
       }
