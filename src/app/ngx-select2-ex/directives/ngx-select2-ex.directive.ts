@@ -1,11 +1,14 @@
-import { Directive, ComponentRef, ElementRef, HostListener, Input, OnInit, OnDestroy, Renderer2 } from '@angular/core';
+import { Directive, ComponentRef, ElementRef, HostListener, Input, OnInit, OnDestroy, Renderer2, Inject } from '@angular/core';
 import { NgxSelect2ExDropdownComponent } from '../components/ngx-select2-ex-dropdown/ngx-select2-ex-dropdown.component';
 import { NgxSelect2ExService } from '../services/ngx-select2-ex.service';
 import { NgxSelect2ExDropdownInjectionService } from '../services/ngx-select2-ex-dropdown-injection.service';
+import { INgxSelect2ExDropdownPosition } from '../interfaces/ngx-select2-ex-dropdown-position';
+import { WindowRef } from '../services/window-ref.service';
 import { Subscription } from 'rxjs/Subscription';
 
 @Directive({
-  selector: '[appNgxSelect2Ex]'
+  selector: '[appNgxSelect2Ex]',
+  providers: [WindowRef]
 })
 export class NgxSelect2ExDirective implements OnInit, OnDestroy {
 
@@ -17,11 +20,12 @@ export class NgxSelect2ExDirective implements OnInit, OnDestroy {
   constructor(
     private el: ElementRef,
     private renderer: Renderer2,
-    private ngxSelect2ExDropdownInjectionService: NgxSelect2ExDropdownInjectionService
+    private ngxSelect2ExDropdownInjectionService: NgxSelect2ExDropdownInjectionService,
+    private winRef: WindowRef
   ) { }
 
   ngOnInit() {
-    this.updateBoundingClientRect();
+    this.updateDropdownPosition();
     this.subscribeToSearchChanges();
   }
 
@@ -73,11 +77,10 @@ export class NgxSelect2ExDirective implements OnInit, OnDestroy {
 
   @HostListener('window:resize')
   resize() {
-    this.updateBoundingClientRect();
+    this.updateDropdownPosition();
   }
 
   private openDropdown() {
-    this.updateBoundingClientRect();
     this.compRef = this.ngxSelect2ExDropdownInjectionService.appendComponent(NgxSelect2ExDropdownComponent, {
       service: this.service,
       multi: this.service.multi,
@@ -88,6 +91,7 @@ export class NgxSelect2ExDirective implements OnInit, OnDestroy {
       language: this.service.language
     });
     this.service.isOpen = true;
+    this.updateDropdownPosition();
   }
 
   private closeDropdown() {
@@ -114,16 +118,23 @@ export class NgxSelect2ExDirective implements OnInit, OnDestroy {
               this.openDropdown();
             }
           }
-          this.service.boundingClientRect = this.el.nativeElement.getBoundingClientRect();
+          this.updateDropdownPosition();
         }
       }
     ));
   }
 
-  private updateBoundingClientRect() {
+  private updateDropdownPosition() {
     this.renderer.setStyle(this.el.nativeElement, 'width', '100%');
-    this.service.boundingClientRect = this.el.nativeElement.getBoundingClientRect();
-    this.renderer.setStyle(this.el.nativeElement, 'width', `${this.el.nativeElement.getBoundingClientRect().width}px`);
+    const boundingClientRect = this.el.nativeElement.getBoundingClientRect();
+    const offsetTop = boundingClientRect.bottom + this.winRef.nativeWindow.scrollY;
+    const dropdownPosition: INgxSelect2ExDropdownPosition = {
+      top: offsetTop,
+      left: boundingClientRect.left,
+      width: boundingClientRect.width
+    };
+    this.service.dropdownPosition = dropdownPosition;
+    this.renderer.setStyle(this.el.nativeElement, 'width', `${boundingClientRect.width}px`);
   }
 
   private unsubscribe() {

@@ -5,6 +5,7 @@ import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { NgxSelect2ExLanguageInputs } from '../classes/ngx-select2-ex-language-inputs';
+import { INgxSelect2ExDropdownPosition } from '../interfaces/ngx-select2-ex-dropdown-position';
 
 @Injectable()
 export class NgxSelect2ExService {
@@ -20,7 +21,7 @@ export class NgxSelect2ExService {
   closeOnSelect: boolean | null = true;
 
   private _options: BehaviorSubject<Array<NgxSelect2ExOption>> = new BehaviorSubject([]);
-  private _boundingClientRect: ReplaySubject<ClientRect> = new ReplaySubject(1);
+  private _dropdownPosition: ReplaySubject<INgxSelect2ExDropdownPosition> = new ReplaySubject(1);
   private _isOpen: BehaviorSubject<boolean> = new BehaviorSubject(false);
   private _isInFocus: BehaviorSubject<boolean> = new BehaviorSubject(false);
   private _selection: BehaviorSubject<Array<NgxSelect2ExOptionHandler>> = new BehaviorSubject([]);
@@ -69,12 +70,12 @@ export class NgxSelect2ExService {
     return this._selection.asObservable();
   }
 
-  set boundingClientRect(boundingClientRect: ClientRect) {
-    this._boundingClientRect.next(boundingClientRect);
+  set dropdownPosition(dropdownPosition: INgxSelect2ExDropdownPosition) {
+    this._dropdownPosition.next(dropdownPosition);
   }
 
-  getBoundingClientRectAsObservable(): Observable<ClientRect> {
-    return this._boundingClientRect.asObservable();
+  getDropdownPositionAsObservable(): Observable<INgxSelect2ExDropdownPosition> {
+    return this._dropdownPosition.asObservable();
   }
 
   set isOpen(isOpen: boolean) {

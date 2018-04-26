@@ -1,7 +1,7 @@
-.row {
-  display: flex;
+.container {
+  background-color: #adadad;
 
-  .col {
-    flex: 1;
+  [class*="col"] {
+    height: 50px;
   }
 }

@@ -4,6 +4,7 @@ import { NgxSelect2ExService } from '../../services/ngx-select2-ex.service';
 import { NgxSelect2ExOptionHandler } from '../../classes/ngx-select2-ex-option-handler';
 import { NgxSelect2ExLanguageInputs } from '../../classes/ngx-select2-ex-language-inputs';
 import { NgxSelect2OptionFilterPipe } from '../../pipes/ngx-select2-option-filter.pipe';
+import { INgxSelect2ExDropdownPosition } from '../../interfaces/ngx-select2-ex-dropdown-position';
 
 @Component({
   selector: 'app-ngx-select2-ex-dropdown',
@@ -36,7 +37,7 @@ export class NgxSelect2ExDropdownComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.subscribeToOptions();
-    this.subscribeToBoundingClientRectChanges();
+    this.subscribeToDropdownPositionChanges();
     this.subscribeToSearchChanges();
   }
 
@@ -114,9 +115,9 @@ export class NgxSelect2ExDropdownComponent implements OnInit, OnDestroy {
     ));
   }
 
-  private subscribeToBoundingClientRectChanges() {
-    this.subscriptions.push(this.service.getBoundingClientRectAsObservable().subscribe(
-      (boundingClientRect: ClientRect) => this.initBoundingClientRectParams(boundingClientRect)
+  private subscribeToDropdownPositionChanges() {
+    this.subscriptions.push(this.service.getDropdownPositionAsObservable().subscribe(
+      (dropdownPosition: INgxSelect2ExDropdownPosition) => this.initDropdownPosition(dropdownPosition)
     ));
   }
 
@@ -126,14 +127,10 @@ export class NgxSelect2ExDropdownComponent implements OnInit, OnDestroy {
     ));
   }
 
-  private initBoundingClientRectParams(boundingClientRect: ClientRect) {
-    this.top = this.getBoundingClientRectParam(boundingClientRect, 'bottom');
-    this.left = this.getBoundingClientRectParam(boundingClientRect, 'left');
-    this.width = this.getBoundingClientRectParam(boundingClientRect, 'width');
-  }
-
-  private getBoundingClientRectParam(boundingClientRect, param: string): string {
-    return boundingClientRect && boundingClientRect[param] ? boundingClientRect[param] + 'px' : '0px';
+  private initDropdownPosition(dropdownPosition: INgxSelect2ExDropdownPosition) {
+    this.top = dropdownPosition.top + 'px';
+    this.left = dropdownPosition.left + 'px';
+    this.width = dropdownPosition.width + 'px';
   }
 
   private selectOnClose() {
