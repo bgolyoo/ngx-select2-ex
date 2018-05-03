@@ -86,7 +86,7 @@ export class NgxSelect2ExComponent implements OnInit, OnChanges, OnDestroy, Cont
 
   registerOnTouched(fn: any) { }
 
-  setDisabledState?(isDisabled: boolean) {
+  setDisabledState(isDisabled: boolean) {
     this.disabled = isDisabled;
     this.ngxSelect2ExService.disabled = isDisabled;
   }
