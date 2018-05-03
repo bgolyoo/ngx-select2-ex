@@ -1,68 +1,94 @@
 <div class="container">
   <div class="row">
-    <dir class="col-md-12 col-lg-6">
+    <div class="col-md-12 col-lg-6">
+      <label for="basic">Classic single</label>
+      <app-ngx-select2-ex [options]="basicOptions" [theme]="'classic'"></app-ngx-select2-ex>
+    </div>
+    <div class="col-md-12 col-lg-6">
+      <label for="basic">Classic multi</label>
+      <app-ngx-select2-ex [options]="basicOptions" [theme]="'classic'" [multi]="true"></app-ngx-select2-ex>
+    </div>
+    <div class="col-md-12 col-lg-6">
+      <label for="basic">Default single</label>
+      <app-ngx-select2-ex [options]="basicOptions" [theme]="'default'"></app-ngx-select2-ex>
+    </div>
+    <div class="col-md-12 col-lg-6">
+      <label for="basic">Default multi</label>
+      <app-ngx-select2-ex [options]="basicOptions" [theme]="'default'" [multi]="true"></app-ngx-select2-ex>
+    </div>
+    <div class="col-md-12 col-lg-6">
+      <label for="basic">Bootstrap single</label>
+      <app-ngx-select2-ex [options]="basicOptions" [theme]="'bootstrap'"></app-ngx-select2-ex>
+    </div>
+    <div class="col-md-12 col-lg-6">
+      <label for="basic">Bootstrap multi</label>
+      <app-ngx-select2-ex [options]="basicOptions" [theme]="'bootstrap'" [multi]="true"></app-ngx-select2-ex>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12 col-lg-6">
       <label for="basic">Disabled</label>
       <app-ngx-select2-ex [options]="basicOptions" [disabled]="true"></app-ngx-select2-ex>
-    </dir>
-    <dir class="col-md-12 col-lg-6">
+    </div>
+    <div class="col-md-12 col-lg-6">
       <label for="basic">Basic single</label>
       <app-ngx-select2-ex [options]="basicOptions"></app-ngx-select2-ex>
-    </dir>
-    <dir class="col-md-12 col-lg-6">
+    </div>
+    <div class="col-md-12 col-lg-6">
       <label for="basic">Basic multi</label>
       <app-ngx-select2-ex [options]="basicOptions" [multi]="true"></app-ngx-select2-ex>
-    </dir>
-    <dir class="col-md-12 col-lg-6">
+    </div>
+    <div class="col-md-12 col-lg-6">
       <label for="basic">Disabled option</label>
       <app-ngx-select2-ex [options]="options"></app-ngx-select2-ex>
-    </dir>
-    <dir class="col-md-12 col-lg-6">
+    </div>
+    <div class="col-md-12 col-lg-6">
       <label for="basic">Select on close</label>
       <app-ngx-select2-ex [options]="options" [selectOnClose]="true"></app-ngx-select2-ex>
-    </dir>
-    <dir class="col-md-12 col-lg-6">
+    </div>
+    <div class="col-md-12 col-lg-6">
       <label for="basic">Close on select</label>
       <app-ngx-select2-ex [options]="options" [closeOnSelect]="false"></app-ngx-select2-ex>
-    </dir>
-    <dir class="col-md-12 col-lg-6">
+    </div>
+    <div class="col-md-12 col-lg-6">
       <label for="basic">Allow clear single</label>
       <app-ngx-select2-ex [options]="options" [allowClear]="true"></app-ngx-select2-ex>
-    </dir>
-    <dir class="col-md-12 col-lg-6">
+    </div>
+    <div class="col-md-12 col-lg-6">
       <label for="basic">Allow clear multi</label>
       <app-ngx-select2-ex [options]="options" [multi]="true" [allowClear]="true"></app-ngx-select2-ex>
-    </dir>
-    <dir class="col-md-12 col-lg-6">
+    </div>
+    <div class="col-md-12 col-lg-6">
       <label for="basic">Hide search box</label>
       <app-ngx-select2-ex [options]="options" [minimumResultsForSearch]="Infinity"></app-ngx-select2-ex>
-    </dir>
-    <dir class="col-md-12 col-lg-6">
+    </div>
+    <div class="col-md-12 col-lg-6">
       <label for="basic">Minimum input length to search (3)</label>
       <app-ngx-select2-ex [options]="options" [minimumInputLength]="3"></app-ngx-select2-ex>
-    </dir>
-    <dir class="col-md-12 col-lg-6">
+    </div>
+    <div class="col-md-12 col-lg-6">
       <label for="basic">Maximum input length to search (5)</label>
       <app-ngx-select2-ex [options]="options" [maximumInputLength]="5"></app-ngx-select2-ex>
-    </dir>
-    <dir class="col-md-12 col-lg-6">
+    </div>
+    <div class="col-md-12 col-lg-6">
       <label for="basic">Ranged input length to search (3-5)</label>
       <app-ngx-select2-ex [options]="options" [minimumInputLength]="3" [maximumInputLength]="5"></app-ngx-select2-ex>
-    </dir>
-    <dir class="col-md-12 col-lg-6">
+    </div>
+    <div class="col-md-12 col-lg-6">
       <label for="basic">Passed custom message for minimum search input</label>
       <app-ngx-select2-ex [options]="options" [minimumInputLength]="3" [language]="language"></app-ngx-select2-ex>
-    </dir>
+    </div>
   </div>
   <div class="row">
     <form [formGroup]="form">
-      <dir class="col-md-12 col-lg-6">
+      <div class="col-md-12 col-lg-6">
         <label for="basic">Single in form</label>
         <app-ngx-select2-ex formControlName="select2Single" [allowClear]="true" [placeholder]="'My placeholder'"></app-ngx-select2-ex>
-      </dir>
-      <dir class="col-md-12 col-lg-6">
-          <label for="basic">Multi in form</label>
+      </div>
+      <div class="col-md-12 col-lg-6">
+        <label for="basic">Multi in form</label>
         <app-ngx-select2-ex formControlName="select2Multi" [multi]="true" [allowClear]="true" [placeholder]="'My placeholder'"></app-ngx-select2-ex>
-      </dir>
+      </div>
     </form>
   </div>
   <div class="row">
